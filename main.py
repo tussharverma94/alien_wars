@@ -1,3 +1,4 @@
+import os
 import pygame
 import random
 import math
@@ -6,23 +7,26 @@ from pygame import mixer
 # init the pygame
 pygame.init()
 
+# base directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # create the screen
 screen = pygame.display.set_mode((800, 600))
 
 # background
-background = pygame.image.load("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\spaceback.jpg")
+background = pygame.image.load(os.path.join(BASE_DIR, "spaceback.jpg"))
 
 # background sound
-mixer.music.load("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\background.wav")
+mixer.music.load(os.path.join(BASE_DIR, "background.wav"))
 mixer.music.play(-1)
 
 # title and icon
 pygame.display.set_caption("Space Invader")
-icon = pygame.image.load("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\ufo.png")
+icon = pygame.image.load(os.path.join(BASE_DIR, "ufo.png"))
 pygame.display.set_icon(icon)
 
 # payer
-playerImg = pygame.image.load("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\player.png")
+playerImg = pygame.image.load(os.path.join(BASE_DIR, "player.png"))
 playerX = 370
 playerY = 480
 playerX_change = 0
@@ -41,7 +45,7 @@ enemyY_change = []
 number_of_enemy = 5
 
 for i in range(number_of_enemy):
-    enemyImg.append(pygame.image.load("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\enimy.png"))
+    enemyImg.append(pygame.image.load(os.path.join(BASE_DIR, "enimy.png")))
     enemyX.append(random.randint(0, 735))
     enemyY.append(random.randint(50, 150))
     enemyX_change.append(1.5)
@@ -57,7 +61,7 @@ def enemy(x, y,i):
 # ready - you cant see the bullet on the screen
 # fier - the bullet is currently moving
 
-bulletImg = pygame.image.load("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\ammo.png")
+bulletImg = pygame.image.load(os.path.join(BASE_DIR, "ammo.png"))
 bulletX = 0
 bulletY = 480
 bulletX_change = 0
@@ -93,10 +97,6 @@ def show_score(x,y):
 #Game over text
 over_font = pygame.font.Font("freesansbold.ttf",64)
 
-def show_score(x,y):
-    score = font.render("Score : " + str(score_value), True, (255,255,255))
-    screen.blit(score,(x,y))
-
 def game_over_text():
     over_text = over_font.render("GAME OVER", True, (255,255,255))
     screen.blit(over_text,(200,250))
@@ -104,7 +104,9 @@ def game_over_text():
 
 # game loop
 running = True
+clock = pygame.time.Clock()
 while running:
+    clock.tick(60)
     # red green blue
     screen.fill((156, 156, 10))
     # background image
@@ -121,7 +123,7 @@ while running:
                 playerX_change = 3
             if event.key == pygame.K_SPACE:
                 if bullet_state == "ready":
-                    bullet_Sound = mixer.Sound("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\laser.wav")
+                    bullet_Sound = mixer.Sound(os.path.join(BASE_DIR, "laser.wav"))
                     bullet_Sound.play()
                     # get the current x coordinate of the bullet
                     bulletX = playerX
@@ -162,7 +164,7 @@ while running:
         # collision
         collision = isCollision(enemyX[i], enemyY[i], bulletX, bulletY)
         if collision:
-            explosion_Sound = mixer.Sound("C:\\Users\\tussh\\PycharmProjects\\spaceinvader\\explosion.wav")
+            explosion_Sound = mixer.Sound(os.path.join(BASE_DIR, "explosion.wav"))
             explosion_Sound.play()
             bulletY = 480
             bullet_state = "ready"
@@ -182,5 +184,5 @@ while running:
         bulletY -= bulletY_change
 
     player(playerX, playerY)
-    # show_score(textX,textY)
+    show_score(textX,textY)
     pygame.display.update()
